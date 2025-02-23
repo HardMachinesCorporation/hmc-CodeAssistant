@@ -1,130 +1,110 @@
-Let me help you set up your GitHub Codespaces environment with proper dev container configuration. 
+Here's a comprehensive README.md for your project:
 
-> First, let's understand the structure we're aiming for:
+# HMC Code Assistant
 
-```mermaid
-flowchart TD
-    Root["hmc-codeAssistant/"]
-    Docker[".dockerfile/"]
-    Backend["backend/"]
-    DevContainer[".devcontainer/"]
-    DockerCompose["docker-compose.yml"]
-    DevJSON["devcontainer.json"]
-    NestJS["nestjs app"]
-    
-    Root --> Docker
-    Root --> Backend
-    Root --> DevContainer
-    Root --> DockerCompose
-    DevContainer --> DevJSON
-    Backend --> NestJS
-    
-    classDef folder fill:#f9f,stroke:#333,color:#000
-    classDef file fill:#fff,stroke:#333,color:#000
-    class Root,Docker,Backend,DevContainer folder
-    class DockerCompose,DevJSON,NestJS file
+A sophisticated coding assistant built with NestJS, utilizing OLLAMA for AI-powered code analysis and RAG (Retrieval-Augmented Generation) system for enhanced code understanding and generation capabilities.
+
+## Overview
+
+This project implements a modern coding assistant that combines the power of AI and traditional code analysis to provide developers with intelligent assistance during their development workflow. The system leverages OLLAMA's advanced language model capabilities and integrates with a RAG system to provide contextual and accurate code suggestions.
+
+## Architecture
+
+The system consists of three main components:
+
+1. **NestJS Backend**
+   - Handles API routing and request processing
+   - Manages user interactions and state
+   - Coordinates between OLLAMA and RAG systems
+
+2. **OLLLAMA Integration**
+   - Provides AI-powered code analysis
+   - Generates contextual suggestions
+   - Handles code understanding and explanation
+
+3. **RAG System**
+   - Enables retrieval-augmented code generation
+   - Provides contextual code completions
+   - Maintains knowledge base of code patterns
+
+## Features
+
+- AI-powered code analysis and suggestions
+- Context-aware code completion
+- Real-time code understanding
+- Integration with popular IDEs
+- Docker-based development environment
+- GitHub Codespaces support
+
+## Prerequisites
+
+- Node.js 21+
+- Docker
+- Docker Compose
+- GitHub Codespaces (optional)
+
+## Development Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/hmc-codeAssistant.git
+   cd hmc-codeAssistant
+   ```
+
+2. Start the development environment:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. Access the services:
+    - Backend: http://localhost:3000
+    - OLLAMA: http://localhost:7869
+
+## Environment Configuration
+
+Create a `.env` file in the project root with the following variables:
+
+```makefile
+OLLAMA_URL=http://ollama:7869
+DB_URL=postgresql://user:password@bd:5432/database
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=your_database
 ```
 
-Create the .devcontainer folder and devcontainer.json file
+## GitHub Codespaces Configuration
 
-```bash
-mkdir -p .devcontainer
-touch .devcontainer/devcontainer.json
+The project includes a dev container configuration for seamless development in GitHub Codespaces. To use:
+
+1. Open the repository in GitHub
+2. Click the "Code" button
+3. Select "Codespaces"
+4. Click "New codespace"
+5. Wait for the environment to provision
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Implement your changes
+4. Run tests
+5. Submit a pull request
+
+## License
+
+[Your License]
+
+## Acknowledgments
+
+This project utilizes:
+- [NestJS](https://nestjs.com/) for the backend framework
+- [OLLLAMA](https://github.com/ollama-dev/ollama) for AI-powered code analysis
+- [RAG System](https://www.rag-system.com/) for retrieval-augmented generation
+
+## API Documentation
+
+API documentation is available at [http://localhost:3000/api](http://localhost:3000/api) once the server is running.
 ```
 
-> Configure your devcontainer.json with NestJS support
-
-```json
-{
-  "name": "Node.js",
-  "build": {
-    "dockerfile": ".dockerfile/Dockerfile",
-    "context": "..",
-    "args": {}
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/node:2": {}
-  },
-  "workspaceMount": "/workspaces/hmc-codeAssistant",
-  "workspaceFolder": "/workspaces/hmc-codeAssistant/backend",
-  "containerUser": "node",
-  "postCreateCommand": "yarn install --cwd backend",
-  "forwardPorts": [3000],
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "johnpapa.vscode-peacock",
-        "PKief.material-icon-theme",
-        "eamodio.gitlens"
-      ]
-    }
-  }
-}
-```
-
-Update your Dockerfile to support NestJS
-
-```dockerfile
-FROM mcr.microsoft.com/vscode/devcontainers/base:debian
-ARG VARIANT="16-bullseye"
-
-# Install Node.js
-RUN if [ "${TARGETARCH}" == "arm64" ]; then \
-curl -fsSL https://deb.nodesource.com/setup_${VARIANT} | bash - && \
-apt-get install -y nodejs && \
-rm -rf /var/lib/apt/lists/* && \
-npm install -g @nestjs/cli; \
-else \
-curl -fsSL https://deb.nodesource.com/setup_${VARIANT} | bash - && \
-apt-get install -y nodejs && \
-rm -rf /var/lib/apt/lists/* && \
-npm install -g @nestjs/cli; \
-fi
-
-# Set working directory to /workspaces/hmc-codeAssistant/backend
-WORKDIR /workspaces/hmc-codeAssistant/backend
-
-# Copy package*.json files
-COPY backend/package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy remaining files
-COPY backend .
-```
-
-Key points about this configuration:
-
-- The workspaceFolder points directly to your backend directory where NestJS lives
-- postCreateCommand installs dependencies after container creation
-- The Dockerfile installs Node.js and NestJS CLI globally
-- All paths are relative to the repository root
-
-After setting this up:
-
-Commit all changes
-
-```bash
-git add .
-git commit -m "Add devcontainer configuration"
-git push origin main
-```
-
-Create a codespace from your repository- Go to your repository on GitHub
-- Click the green "Code" button
-- Select "Codespaces" tab
-- Click "New codespace"
-
-Configure WebStorm- Install the "Remote Development" plugin
-- Connect to your codespace using SSH
-- Map your local project to the remote path
-
-Important notes- Your existing docker-compose.yml will still work alongside this configuration
-- The dev container provides a consistent environment for all developers
-- WebStorm will use the same environment as your codespace
-- Any changes to devcontainer.json require rebuilding the codespace
-
-This setup ensures that both your local WebStorm and remote codespace environments are properly configured for NestJS development.
