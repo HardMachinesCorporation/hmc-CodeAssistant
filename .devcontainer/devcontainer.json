@@ -1,0 +1,27 @@
+{
+  "name": "Node.js",
+  "build": {
+    "dockerfile": ".dockerfile/Dockerfile",
+    "context": "..",
+    "args": {}
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:2": {}
+  },
+  "workspaceMount": "/workspaces/hmc-codeAssistant",
+  "workspaceFolder": "/workspaces/hmc-codeAssistant/backend",
+  "containerUser": "node",
+  "postCreateCommand": "yarn install --cwd backend",
+  "forwardPorts": [3000],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "johnpapa.vscode-peacock",
+        "PKief.material-icon-theme",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}
