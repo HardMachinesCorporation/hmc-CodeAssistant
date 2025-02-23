@@ -1,4 +1,3 @@
-Here's a comprehensive README.md for your project:
 
 # HMC Code Assistant
 
